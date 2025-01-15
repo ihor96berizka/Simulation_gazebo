@@ -16,20 +16,20 @@ find_package(sensor_msgs REQUIRED)
 add_subdirectory(solver)
 add_subdirectory(main_node)
 
-add_executable(main_swc
+add_executable(obstacle_avoidance
   src/main_swc.cpp
 )
 
-ament_target_dependencies(main_swc
+ament_target_dependencies(obstacle_avoidance
   rclcpp
   geometry_msgs
   sensor_msgs
 )
 
-target_link_libraries(main_swc MainNode)
+target_link_libraries(obstacle_avoidance MainNode)
 
 install(TARGETS
-  main_swc
+  obstacle_avoidance
   MainNode
   Solver
   DESTINATION lib/${PROJECT_NAME}
