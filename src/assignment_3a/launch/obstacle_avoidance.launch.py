@@ -48,6 +48,8 @@ def generate_launch_description():
 
     turtlebot3_gazebo_launch = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
 
+    print('=========turtlebot3_gazebo_launch====', turtlebot3_gazebo_launch)
+
     return LaunchDescription([
         DeclareLaunchArgument(
             'world',

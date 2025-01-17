@@ -38,6 +38,8 @@ install(TARGETS
 # Install additional directories.
 install(DIRECTORY
   launch
+  rviz
+  worlds
   resource
   DESTINATION share/${PROJECT_NAME}/
 )
