@@ -13,11 +13,14 @@ endif()
 include(GNUInstallDirs)
 
 set(SOURCE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/data_serializer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main_node.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ros_data_provider.cpp
 )
 
 set(HEADER_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/data_serializer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/json.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/main_node.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ros_data_provider.hpp
     ${COMMON_SOURCES}
@@ -34,6 +37,10 @@ ament_target_dependencies(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} Solver)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/data_serializer.hpp)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/data_serializer.hpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/main_node.hpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER

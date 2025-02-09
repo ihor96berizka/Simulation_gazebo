@@ -8,10 +8,12 @@
 namespace Solver
 {
 
-void ISolver::init(std::unique_ptr<IDataProvider> dataProvider)
+void ISolver::init(std::unique_ptr<IDataProvider> dataProvider,
+                   std::unique_ptr<ISerializer> serializer)
 {
     std::cout << "ISolver::init beg" << std::endl;
     _dataProvider = std::move(dataProvider);
+    _serializer = std::move(serializer);
     std::cout << "ISolver::init end" << std::endl;
 }
 
@@ -44,10 +46,10 @@ std::vector<DistanceSensorData> ISolver::calculateTotalField(const std::vector<D
                          repulsive[idx].distance + attractive[idx].distance});
     }
 
-    std::cout << "====print total field values=======\n";
+    //std::cout << "====print total field values=======\n";
     for (auto& item: total)
     {
-        std::cout << "Force[" << item.angle << "]" << item.distance << '\n';
+        //std::cout << "Force[" << item.angle << "]" << item.distance << '\n';
     }
     return total;
 }
@@ -109,10 +111,10 @@ std::vector<Obstacle> ISolver::findObstacles()
     std::cout << "Number of obstacles: " << obstacles.size() << '\n';
     for (size_t k = 0; k < obstacles.size(); ++k)
     {
-        std::cout << "Obstacle # " << k << '\n';
+        //std::cout << "Obstacle # " << k << '\n';
         for (size_t i = 0; i < obstacles[k].angles.size(); ++i)
         {
-            std::cout << "angle: " << obstacles[k].angles[i] << " | distance:" << obstacles[k].distances[i] << '\n';
+            //std::cout << "angle: " << obstacles[k].angles[i] << " | distance:" << obstacles[k].distances[i] << '\n';
             //obstacles[k].angles[i] = DegreesToRadians(obstacles[k].angles[i]);
         }
     }
@@ -125,13 +127,13 @@ void ISolver::calculateObstaclesAverages(std::vector<Obstacle> &obstacles)
     for (auto& item : obstacles)
     {
         double averageDistance = std::accumulate(item.distances.begin(), item.distances.end(), 0.0) / item.distances.size();
-        std::cout << "First angle: " << item.angles.at(0) << "  Last angle: " << item.angles.at(item.angles.size()-1) << std::endl;
+        //std::cout << "First angle: " << item.angles.at(0) << "  Last angle: " << item.angles.at(item.angles.size()-1) << std::endl;
         double averageAngle = item.angles.at(item.angles.size()-1) - item.angles.at(0);
                 //std::accumulate(item.angles.begin(), item.angles.end(), 0.0) / item.angles.size();
         item.averageDistance = averageDistance;
         item.averageAngle = averageAngle;
 
-        std::cout << "Average dist: " << averageDistance << " | avg angle: " << item.averageAngle << std::endl;
+        //std::cout << "Average dist: " << averageDistance << " | avg angle: " << item.averageAngle << std::endl;
     }
 }
 

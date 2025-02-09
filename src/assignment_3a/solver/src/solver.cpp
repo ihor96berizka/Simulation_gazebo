@@ -51,15 +51,16 @@ int GussianSolver::calculateHeadingAngle(int teta_goal)
 {
     std::cout << "===============calculateHeadingAngle=====" << std::endl;
     _distanceSensorData = _dataProvider->getSample();
-    std::cout << "===============calculateForces=====" << std::endl;
+    std::cout << "===============calculateGForces=====" << std::endl;
     calculateForces(teta_goal);
     auto angle = (std::min_element(std::begin(_forces.totalFieldData), std::end(_forces.totalFieldData),
                             [](const DistanceSensorData& lhs, const DistanceSensorData& rhs)
            {
                return lhs.distance < rhs.distance;
            })->angle);
-    std::cout << "----------------Safe angle: " << angle << "----------------\n";
+    std::cout << "---------lib-------Safe angle: " << angle << "----------------\n";
     return angle;
+    //return 11;
 }
 
 
@@ -91,11 +92,11 @@ std::vector<DistanceSensorData> GussianSolver::calculateRepulsiveField()
         for (size_t k = 0; k < obstacles.size(); ++k)
         {
             int midIdx = obstacles[k].angles.size() / 2;
-            std::cout << "Average angle g: " << obstacles[k].averageAngle << std::endl;
+            //std::cout << "Average angle g: " << obstacles[k].averageAngle << std::endl;
             double sigma = (obstacles[k].averageAngle / 2.0);  // half of the angle occupied by obstacle
             //qInfo() << "angle: " << obstacles[k].averageAngle;
             //qInfo() << "midIDx: " << midIdx;
-            std::cout << "sigma/: " << sigma << std::endl;
+            //std::cout << "sigma/: " << sigma << std::endl;
 
             double Teta_k = (obstacles[k].angles[midIdx]);  //center angle of the obstacle
             //qInfo() << "teta[0]: " << Teta_k;

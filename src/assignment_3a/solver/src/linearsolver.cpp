@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <numeric>
+#include <iostream>
 
 namespace Solver
 {
@@ -16,11 +17,13 @@ int LinearSolver::calculateHeadingAngle(int teta_goal)
            {
                return lhs.distance < rhs.distance;
            })->angle;
-    return angle;
+    //return angle;
+    return 11;
 }
 
 std::vector<Solver::DistanceSensorData> LinearSolver::calculateRepulsiveField()
 {
+    std::cout << "=======Linear find obstacles....." << std::endl;
     std::vector obstacles = findObstacles();
 
     //calculate d[k] and phi[k] - for (6)

@@ -67,6 +67,7 @@ def generate_launch_description():
         Node(
             package='assignment_3a',
             executable='obstacle_avoidance',
+            #prefix=['gdbserver localhost:3000'],
             name='obstacle_avoidance_node',
             emulate_tty=True,
             output='screen',

@@ -3,9 +3,10 @@
 #include <vector>
 #include <cmath>
 
+#include "common_data_types.h"
+
 namespace Solver
 {
-
 constexpr size_t kMaxNumberOfSamples{360};
 
 constexpr double DegreesToRadians(double degrees) {
@@ -15,12 +16,6 @@ constexpr double DegreesToRadians(double degrees) {
 constexpr double RadiansToDegrees(double radians) {
     return radians * (180.0 / M_PI);
 }
-
-struct DistanceSensorData
-{
-    double angle;  // in radians.
-    double distance;
-};
 
 class IDataProvider
 {

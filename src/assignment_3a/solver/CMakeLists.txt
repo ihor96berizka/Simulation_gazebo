@@ -20,6 +20,8 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/solver.cpp
 )
 set(HEADER_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/common_data_types.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/idata_serializer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/idataprovider.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/jthread.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/isolver.h
@@ -32,17 +34,21 @@ add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/isolver.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/common_data_types.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/solver.h)
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/linearsolver.h)
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/laplacesolver.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/idata_serializer.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/idataprovider.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/isolver.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/jthread.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/laplacesolver.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/linearsolver.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/solver.h)
 
 # For access to standard installation directory variables (CMAKE_INSTALL_xDIR).
 # include(GNUInstallDirs)

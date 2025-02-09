@@ -37,11 +37,13 @@ private:
 
     // queue of lidar scans to be processed
     tools::ThreadSafeQueue<std::vector<float>> queue_;
-    // queue of ultrasonic data to be processed
-    //ThreadSafeQueue<std::pair<float, float>> queue_;
+
+    //std::vector<float> latest_lidar_sample;
+    //mutable std::mutex lidar_data_mtx_;
+
     std::unique_ptr<tools::jthread> processing_thread_;
     std::unique_ptr<Solver::ISolver> solver_;
-    double local_heading = Solver::SolverParams::_teta_goal;
+    double teta_goal = Solver::SolverParams::_teta_goal;
 };
 
 #endif // MAIN_NODE_HPP

@@ -33,6 +33,7 @@ class ThreadSafeQueue
         {
             std::unique_lock lock{_mtx};
             _cond.wait(lock, [this]{return !_queue.empty();});
+            cleanOldItems();
             value = _queue.front();
             _queue.pop();
         }
@@ -44,6 +45,20 @@ class ThreadSafeQueue
         }
 
     private:
+        // store only kMaxNumberOfItems latest items in queue.
+        // older items should be deleted.
+        void cleanOldItems()
+        {
+            if (_queue.size() > kMaxNumberOfItems)
+            {
+                while (_queue.size() != kMaxNumberOfItems)
+                {
+                    _queue.pop();
+                }
+            }
+        }
+
+        inline static constexpr size_t kMaxNumberOfItems{1};
         mutable std::mutex _mtx;
         std::condition_variable _cond;
         std::queue<Item> _queue;

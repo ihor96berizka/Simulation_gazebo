@@ -1,4 +1,5 @@
 #include "ros_data_provider.hpp"
+#include "isolver.h"
 
 #include <iostream>
 #include <fstream>
@@ -30,20 +31,20 @@ std::vector<Solver::DistanceSensorData> RosDataProvider::getSample()
         if (raw_msg[angle] == std::numeric_limits<float>::infinity())
         {
             //RCLCPP_INFO(rclcpp::get_logger("test_logger"), "Repacking messages.....");
-            std::cout << "----replace inf val...." << std::endl;
-            raw_msg[angle] = 2;
+            //std::cout << "----replace inf val...." << std::endl;
+            raw_msg[angle] = Solver::SolverParams::_distance_sensor_range;
         }
-        converted_msgs.push_back({static_cast<double>(angle)-90, raw_msg[angle]});
+        converted_msgs.push_back({static_cast<double>(angle), raw_msg[angle]});
     }
 
-    std::cout << "Converted: " << converted_msgs.size() << " items\n";
-    RCLCPP_INFO(rclcpp::get_logger("test_logger"), "Converted %lu items", converted_msgs.size());
+    //std::cout << "Converted: " << converted_msgs.size() << " items\n";
+    //RCLCPP_INFO(rclcpp::get_logger("test_logger"), "Converted %lu items", converted_msgs.size());
     //std::ofstream file("lidar_data.txt", std::ios::app);
     
     for (const auto& [angle, dist]: converted_msgs)
     {
-        std::cout  << angle << "|" << dist << std::endl;
-        RCLCPP_INFO(rclcpp::get_logger("test_logger"), "Angle: %f,  dist: %f", angle, dist);
+        //std::cout  << angle << "|" << dist << std::endl;
+        //RCLCPP_INFO(rclcpp::get_logger("test_logger"), "Angle: %f,  dist: %f", angle, dist);
         //file << angle << " " << dist << std::endl;
     }
 

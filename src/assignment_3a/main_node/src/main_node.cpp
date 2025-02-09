@@ -1,6 +1,7 @@
 #include "main_node.hpp"
 
 #include "ros_data_provider.hpp"
+#include "data_serializer.hpp"
 #include "solver.h"
 #include "linearsolver.h"
 #include "laplacesolver.h"
@@ -36,38 +37,54 @@ void MainSwcNode::init()
                 std::placeholders::_1));
 
     auto dataProvider = std::make_unique<RosDataProvider>(queue_);
+    auto dataSerializer = std::make_unique<Serializer>();
     solver_ = //std::make_unique<Solver::LinearSolver>();
-            //std::make_unique<Solver::GussianSolver>();
-            std::make_unique<Solver::LaplaceSolver>();
-    solver_->init(std::move(dataProvider));
+            std::make_unique<Solver::GussianSolver>();
+            //std::make_unique<Solver::LaplaceSolver>();
+    solver_->init(std::move(dataProvider), std::move(dataSerializer));
 
-    std::atomic<int> teta_goal = 0;
+
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() start processing thread ======== ");
     
-    
-    processing_thread_ = std::make_unique<tools::jthread>([this, teta = &teta_goal]()
+    RCLCPP_INFO(this->get_logger(), " ======init teta: %f ====== ", teta_goal);
+    processing_thread_ = std::make_unique<tools::jthread>([this]()
     {
-        std::this_thread::sleep_for(1s);
+        //std::this_thread::sleep_for(500ms);
             RCLCPP_INFO(this->get_logger(), " ======calculate angle begin ====== ");
-            /*int angle = solver_->calculateHeadingAngle(teta->load());
+            RCLCPP_INFO(this->get_logger(), " ======calculate angle teta: %f ====== ", teta_goal);
+            int angle = solver_->calculateHeadingAngle(teta_goal);
             RCLCPP_INFO(this->get_logger(), "Safe angle: %d", angle);
-            //std::cout << "Safe angle: " << angle << std::endl;
-            /*
-            * send angle to actuator
-            */
-            //teta->store( teta->load() - angle);
-            //RCLCPP_INFO(this->get_logger(), "new teta_goal angle: %d", teta);
+            std::cout << "Safe angle: " << angle << std::endl;
+            
+        //  send angle to actuator
+            
+            //teta_goal = teta_goal - angle;
+            //RCLCPP_INFO(this->get_logger(), "new teta_goal angle: %f", teta_goal);
 
             //Solver::SolverParams::_local_heading = Solver::SolverParams::_teta_goal + angle;
 
             
             RCLCPP_INFO(this->get_logger(), " ====== send command to actuator ====== ");
             auto command_message = std::make_unique<geometry_msgs::msg::Twist>();
-            command_message->linear.x = 0;//0.025;
-            command_message->angular.z = M_PI / 4.0;//DegreesToRadians(angle);
+            command_message->linear.x = 0.05;
+            command_message->angular.z = DegreesToRadians(angle);
             publisher_->publish(std::move(command_message));
             RCLCPP_INFO(this->get_logger(), " ====== command is sent to actuator ====== ");
-        
+
+            std::this_thread::sleep_for(500ms);
+
+            int safe_angle_rollback = angle * -1;
+            std::cout << "Safe angle rollback: " << safe_angle_rollback << std::endl;
+            if (safe_angle_rollback != 0)
+            {
+                RCLCPP_INFO(this->get_logger(), " ====== Restore original heading command to actuator ====== ");
+                auto restore_heading_message = std::make_unique<geometry_msgs::msg::Twist>();
+                restore_heading_message->linear.x = 0.0005;
+            
+                restore_heading_message->angular.z = DegreesToRadians(safe_angle_rollback);
+                publisher_->publish(std::move(restore_heading_message));
+                std::this_thread::sleep_for(2500ms);
+            }
     });
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() end ======== ");
     
@@ -75,12 +92,15 @@ void MainSwcNode::init()
 
 void MainSwcNode::lidarSensorCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
 {
-    RCLCPP_INFO(this->get_logger(), "lidar scan received");
+    //RCLCPP_INFO(this->get_logger(), "lidar scan received");
     
     /*for (int idx = 0; idx < 180; ++idx)
     {
         RCLCPP_INFO(this->get_logger(), "angle: %d; dist: %f", idx-90, msg->ranges[idx]);
     }*/
     queue_.push(msg->ranges);
-    RCLCPP_INFO(this->get_logger(), "lidar scan pushed to queue");
+
+    //std::lock_guard lock{lidar_data_mtx_};
+    //latest_lidar_sample = msg->ranges;
+   // RCLCPP_INFO(this->get_logger(), "lidar scan pushed to queue");
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "idataprovider.h"
+#include "idata_serializer.h"
 
 #include <memory>
 #include <string>
@@ -8,33 +9,6 @@
 
 namespace Solver
 {
-    
-struct Obstacle
-{
-    std::vector<double> distances;
-    std::vector<double> angles;
-    double averageDistance;
-    double averageAngle;
-    double a;
-};
-
-struct SolverParams
-{
-    static constexpr double _thresholdDistance = 0.5; // minimum distance to object.
-    static constexpr double _w_robot = 0.5; // robot width in meters.
-    static constexpr double _distance_sensor_range = 1; // maximum range of distance sensor, in meters.
-    static constexpr double _teta_goal = (0); // angle to goal point.
-    static constexpr double _gamma = 0.01; // see eq (11)
-    inline static double _local_heading{_teta_goal};
-};
-
-struct Forces
-{
-    std::vector<DistanceSensorData> repulsiveFieldData;
-    std::vector<DistanceSensorData> attrFieldData;
-    std::vector<DistanceSensorData> totalFieldData;
-};
-
 /*
 * Usage: Create instance of Solver.
 * Flow:
@@ -46,7 +20,8 @@ struct Forces
 class ISolver
 {
 public:
-    void init(std::unique_ptr<IDataProvider> dataProvider);
+    void init(std::unique_ptr<IDataProvider> dataProvider,
+              std::unique_ptr<ISerializer> serializer);
     std::vector<DistanceSensorData> getSensorData();
     Forces getForces();
     virtual int calculateHeadingAngle(int teta_goal) = 0;
@@ -55,6 +30,7 @@ protected:
     std::vector<DistanceSensorData> _distanceSensorData;
     Forces _forces;
     std::unique_ptr<IDataProvider> _dataProvider;
+    std::unique_ptr<ISerializer> _serializer;
 
     std::vector<Obstacle> findObstacles();
     void enlargeObstacles(std::vector<Obstacle>& obstacles, const double w_robot);
