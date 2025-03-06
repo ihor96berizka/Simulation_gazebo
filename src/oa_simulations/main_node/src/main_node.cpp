@@ -26,7 +26,7 @@ MainSwcNode::~MainSwcNode()
 
 void MainSwcNode::init()
 {
-    std::this_thread::sleep_for(15s);
+    std::this_thread::sleep_for(10s);
     std::cout <<  " ============ MainSwcNode::init() begin ======== " << std::endl;
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() begin ======== ");
     publisher_ = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 1);
@@ -37,12 +37,18 @@ void MainSwcNode::init()
                 std::placeholders::_1));
 
     auto dataProvider = std::make_unique<RosDataProvider>(queue_);
-    auto dataSerializer = std::make_unique<Serializer>();
+    auto dataSerializer = std::make_unique<Serializer>("dataRos.json");
     solver_ = //std::make_unique<Solver::LinearSolver>();
-            std::make_unique<Solver::GussianSolver>();
-            //std::make_unique<Solver::LaplaceSolver>();
+            //std::make_unique<Solver::GussianSolver>();
+            std::make_unique<Solver::LaplaceSolver>();
     solver_->init(std::move(dataProvider), std::move(dataSerializer));
 
+
+    auto command_message = std::make_unique<geometry_msgs::msg::Twist>();
+    command_message->linear.x = 0.0;
+    command_message->angular.z = DegreesToRadians(-30);
+    publisher_->publish(std::move(command_message));
+    std::this_thread::sleep_for(1s);
 
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() start processing thread ======== ");
     
@@ -52,10 +58,14 @@ void MainSwcNode::init()
         //std::this_thread::sleep_for(500ms);
             RCLCPP_INFO(this->get_logger(), " ======calculate angle begin ====== ");
             RCLCPP_INFO(this->get_logger(), " ======calculate angle teta: %f ====== ", teta_goal);
-            int angle = solver_->calculateHeadingAngle(teta_goal);
+            auto mapped_teta_goal = Solver::map(teta_goal, 0, 360, -180, 180);
+            RCLCPP_INFO(this->get_logger(), " ======calculate angle mapped teta: %f ====== ", mapped_teta_goal);
+            int angle = solver_->calculateHeadingAngle(0);
+
             RCLCPP_INFO(this->get_logger(), "Safe angle: %d", angle);
-            std::cout << "Safe angle: " << angle << std::endl;
-            
+            //std::cout << "Safe angle: " << angle << std::endl;
+            //auto unmapped_angle = Solver::map(angle, -180, 180, 0, 360);
+            //RCLCPP_INFO(this->get_logger(), "Unmapped Safe angle: %d", unmapped_angle);
         //  send angle to actuator
             
             //teta_goal = teta_goal - angle;
@@ -66,17 +76,21 @@ void MainSwcNode::init()
             
             RCLCPP_INFO(this->get_logger(), " ====== send command to actuator ====== ");
             auto command_message = std::make_unique<geometry_msgs::msg::Twist>();
-            command_message->linear.x = 0.05;
+            command_message->linear.x = 0.1;
             command_message->angular.z = DegreesToRadians(angle);
             publisher_->publish(std::move(command_message));
             RCLCPP_INFO(this->get_logger(), " ====== command is sent to actuator ====== ");
 
-            std::this_thread::sleep_for(500ms);
+            // serialize data to file
+            solver_->serializeToFile();
 
-            int safe_angle_rollback = angle * -1;
-            std::cout << "Safe angle rollback: " << safe_angle_rollback << std::endl;
-            if (safe_angle_rollback != 0)
+            std::this_thread::sleep_for(1000ms);
+
+            
+            if (angle != 0)
             {
+                int safe_angle_rollback = angle * -1;
+                std::cout << "Safe angle rollback: " << safe_angle_rollback << std::endl;
                 RCLCPP_INFO(this->get_logger(), " ====== Restore original heading command to actuator ====== ");
                 auto restore_heading_message = std::make_unique<geometry_msgs::msg::Twist>();
                 restore_heading_message->linear.x = 0.0005;

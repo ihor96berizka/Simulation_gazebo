@@ -4,6 +4,15 @@
 #include <iostream>
 #include <fstream>
 
+template <typename T>
+void circular_shift(std::vector<T>& vec, int N) {
+    int size = vec.size();
+    if (size == 0) return; // Handle empty vector case
+
+    N = (N % size + size) % size; // Normalize N to avoid negative shifts
+    std::rotate(vec.begin(), vec.begin() + N, vec.end());
+}
+
 void dumpSensorData(const std::vector<Solver::DistanceSensorData> &msgs)
 {
     
@@ -34,14 +43,16 @@ std::vector<Solver::DistanceSensorData> RosDataProvider::getSample()
             //std::cout << "----replace inf val...." << std::endl;
             raw_msg[angle] = Solver::SolverParams::_distance_sensor_range;
         }
-        converted_msgs.push_back({static_cast<double>(angle), raw_msg[angle]});
+        auto mapped_angle = Solver::map(angle, 0, 360, -180, 180);
+        converted_msgs.push_back({static_cast<double>(mapped_angle), raw_msg[angle]});
     }
 
     //std::cout << "Converted: " << converted_msgs.size() << " items\n";
     //RCLCPP_INFO(rclcpp::get_logger("test_logger"), "Converted %lu items", converted_msgs.size());
     //std::ofstream file("lidar_data.txt", std::ios::app);
-    
-    for (const auto& [angle, dist]: converted_msgs)
+    //circular_shift(converted_msgs, 180);
+
+    //for (const auto& [angle, dist]: converted_msgs)
     {
         //std::cout  << angle << "|" << dist << std::endl;
         //RCLCPP_INFO(rclcpp::get_logger("test_logger"), "Angle: %f,  dist: %f", angle, dist);

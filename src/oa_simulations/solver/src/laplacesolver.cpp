@@ -47,13 +47,13 @@ std::vector<DistanceSensorData> LaplaceSolver::calculateRepulsiveField()
         {
             int midIdx = obstacles[k].angles.size() / 2;
             double sigma = obstacles[k].averageAngle / 2.0;  // half of the angle occupied by obstacle
-            std::cout << "AverageAngle: " << obstacles[k].averageAngle << std::endl;
+            //std::cout << "AverageAngle: " << obstacles[k].averageAngle << std::endl;
             //qInfo() << "angle: " << obstacles[k].averageAngle;
             //qInfo() << "midIDx: " << midIdx;
-            std::cout << "sigma/: " << sigma << std::endl;
+            //std::cout << "sigma/: " << sigma << std::endl;
 
             double Teta_k = obstacles[k].angles[midIdx];  //center angle of the obstacle
-            std::cout << "teta[0]: " << Teta_k << std::endl;
+            //std::cout << "teta[0]: " << Teta_k << std::endl;
             double underExp = -(std::sqrt(2) * std::abs(DegreesToRadians(Teta_k - _distanceSensorData[i].angle)))
                     /
                     sigma;
