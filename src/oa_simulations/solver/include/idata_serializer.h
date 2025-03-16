@@ -7,7 +7,7 @@ namespace Solver
 class ISerializer
 {
 public:
-    virtual void serializeForces(const Forces& forces) = 0;
+    virtual void serializeData(const Forces& forces, const std::vector<DistanceSensorData> lidar_data) = 0;
     virtual ~ISerializer() = default;
 };
 }

@@ -30,7 +30,7 @@ Forces ISolver::getForces()
 
 void ISolver::serializeToFile()
 {
-    _serializer->serializeForces(_forces);
+    _serializer->serializeData(_forces, _distanceSensorData);
 }
 
 void ISolver::calculateForces(int teta_goal)
