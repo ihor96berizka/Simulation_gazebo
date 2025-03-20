@@ -49,7 +49,7 @@ void MainSwcNode::init()
     command_message->angular.z = DegreesToRadians(30);
     publisher_->publish(std::move(command_message));
     std::this_thread::sleep_for(1s);
-*/
+*/ 
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() start processing thread ======== ");
     
     RCLCPP_INFO(this->get_logger(), " ======init teta: %f ====== ", teta_goal);
@@ -118,3 +118,4 @@ void MainSwcNode::lidarSensorCallback(const sensor_msgs::msg::LaserScan::SharedP
     //latest_lidar_sample = msg->ranges;
    // RCLCPP_INFO(this->get_logger(), "lidar scan pushed to queue");
 }
+
