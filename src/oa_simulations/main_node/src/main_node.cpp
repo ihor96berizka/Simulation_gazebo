@@ -26,7 +26,7 @@ MainSwcNode::~MainSwcNode()
 
 void MainSwcNode::init()
 {
-    std::this_thread::sleep_for(15s);
+    std::this_thread::sleep_for(1s);
     std::cout <<  " ============ MainSwcNode::init() begin ======== " << std::endl;
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() begin ======== ");
     publisher_ = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 1);
@@ -35,6 +35,13 @@ void MainSwcNode::init()
       "/scan", 1,
       std::bind(&MainSwcNode::lidarSensorCallback, this,
                 std::placeholders::_1));
+
+    // Subscribe to the odometry topic
+    odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+        "/odom", 10, std::bind(&MainSwcNode::odom_callback, this, std::placeholders::_1));
+
+    last_position_ = std::make_pair(0.0, 0.0);
+    total_distance_.store(0.0);
 
     auto dataProvider = std::make_unique<RosDataProvider>(queue_);
     auto dataSerializer = std::make_unique<Serializer>("dataRos.json");
@@ -55,6 +62,8 @@ void MainSwcNode::init()
     RCLCPP_INFO(this->get_logger(), " ======init teta: %f ====== ", teta_goal);
     processing_thread_ = std::make_unique<tools::jthread>([this]()
     {
+            ++step_counter;
+            RCLCPP_INFO(this->get_logger(), " ======Step counter: %d ====== ", step_counter);
         //std::this_thread::sleep_for(500ms);
             RCLCPP_INFO(this->get_logger(), " ======calculate angle begin ====== ");
             RCLCPP_INFO(this->get_logger(), " ======calculate angle teta: %f ====== ", teta_goal);
@@ -99,6 +108,19 @@ void MainSwcNode::init()
                 publisher_->publish(std::move(restore_heading_message));
                 std::this_thread::sleep_for(1500ms);
             }
+
+            RCLCPP_INFO(this->get_logger(), "========Traversed Path Length: %.2f meters=======", total_distance_.load());
+
+            
+            if (step_counter == 28)
+            {
+                RCLCPP_INFO(this->get_logger(), "+++++++++28 steps executed++++++++. Stopping robot.");
+                auto command_message = std::make_unique<geometry_msgs::msg::Twist>();
+                command_message->linear.x = 0.0;
+                command_message->angular.z = 0;
+                publisher_->publish(std::move(command_message));
+                std::this_thread::sleep_for(15s);
+            }
     });
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() end ======== ");
     
@@ -119,3 +141,28 @@ void MainSwcNode::lidarSensorCallback(const sensor_msgs::msg::LaserScan::SharedP
    // RCLCPP_INFO(this->get_logger(), "lidar scan pushed to queue");
 }
 
+void MainSwcNode::odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
+{
+    double current_x = msg->pose.pose.position.x;
+        double current_y = msg->pose.pose.position.y;
+
+        // If it's not the first callback, calculate the distance
+        if (last_position_.first != 0.0 || last_position_.second != 0.0)
+        {
+            double dx = current_x - last_position_.first;
+            double dy = current_y - last_position_.second;
+            double distance = std::sqrt(dx * dx + dy * dy);
+            //total_distance_.fetch_add(distance);
+
+            double old = total_distance_.load();
+            while (!total_distance_.compare_exchange_weak(old, old + distance)) {
+                // old is updated with current value automatically
+            }
+
+            // Log the result
+            //RCLCPP_INFO(this->get_logger(), "========Traversed Path Length: %.2f meters=======", total_distance_);
+        }
+
+        // Update the last position
+        last_position_ = std::make_pair(current_x, current_y);
+}

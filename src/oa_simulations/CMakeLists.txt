@@ -12,6 +12,7 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 add_subdirectory(solver)
 add_subdirectory(main_node)
@@ -24,6 +25,7 @@ ament_target_dependencies(obstacle_avoidance
   rclcpp
   geometry_msgs
   sensor_msgs
+  nav_msgs
 )
 
 target_link_libraries(obstacle_avoidance MainNode)
