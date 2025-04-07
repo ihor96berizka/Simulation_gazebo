@@ -26,7 +26,7 @@ MainSwcNode::~MainSwcNode()
 
 void MainSwcNode::init()
 {
-    std::this_thread::sleep_for(1s);
+    std::this_thread::sleep_for(10s);
     std::cout <<  " ============ MainSwcNode::init() begin ======== " << std::endl;
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() begin ======== ");
     publisher_ = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 1);
@@ -46,8 +46,8 @@ void MainSwcNode::init()
     auto dataProvider = std::make_unique<RosDataProvider>(queue_);
     auto dataSerializer = std::make_unique<Serializer>("dataRos.json");
     solver_ = //std::make_unique<Solver::LinearSolver>();
-            //std::make_unique<Solver::GussianSolver>();
-            std::make_unique<Solver::LaplaceSolver>();
+            std::make_unique<Solver::GussianSolver>();
+            //std::make_unique<Solver::LaplaceSolver>();
     solver_->init(std::move(dataProvider), std::move(dataSerializer));
 
 

@@ -33,7 +33,7 @@ std::vector<DistanceSensorData> LaplaceSolver::calculateRepulsiveField()
     for (size_t k = 0; k < obstacles.size(); ++k)
     {
         double d = SolverParams::_distance_sensor_range - (obstacles[k].averageDistance);
-        obstacles[k].a =  d * std::exp(0.5);
+        obstacles[k].a =  d * std::exp(std::sqrt(2));
         //qInfo() << "A[" << k << "]=" << obstacles[k].a;
     }
 

@@ -7,43 +7,12 @@
 
 namespace Solver
 {
-
+    double calculate_val(double theta, double Teta_k, double sigma, double A) {
+        double underExp = std::pow(Teta_k - theta, 2) / (2 * std::pow(sigma, 2));
+        return A * std::exp(-underExp);
+    }
 std::vector<std::vector<DistanceSensorData> > GussianSolver::getRepulsiceComponents()
 {
-    /*auto obstacles = enlargeObstacles(SolverParams::_w_robot);
-    std::vector<std::vector<DistanceSensorData>> components(obstacles.size());
-
-    // (9)
-    for (size_t k = 0; k < obstacles.size(); ++k)
-    {
-        double d = SolverParams::_distance_sensor_range - (obstacles[k].averageDistance);
-        obstacles[k].a =  d * std::exp(0.5);
-        //qInfo() << "A[" << k << "]=" << obstacles[k].a;
-    }
-
-    // (10)
-    for (size_t i = 0; i < _distanceSensorData.size(); ++i) // distance sensor data is used, cause it holds angles.
-    {
-        for (size_t k = 0; k < obstacles.size(); ++k)
-        {
-            int midIdx = obstacles[k].angles.size() / 2;
-            double sigma = obstacles[k].averageAngle / 2.0;  // half of the angle occupied by obstacle
-            //qInfo() << "angle: " << obstacles[k].averageAngle;
-            //qInfo() << "midIDx: " << midIdx;
-            //qInfo() << "sigma/: " << sigma;
-
-            double Teta_k = obstacles[k].angles[midIdx];  //center angle of the obstacle
-            //qInfo() << "teta[0]: " << Teta_k;
-            double underExp = -(std::pow(Teta_k - _distanceSensorData[i].angle, 2))
-                    /
-                    2.0 * std::pow(sigma, 2);
-            //qInfo() << "A[k]: " << obstacles[k].a;
-            double val = obstacles[k].a * std::exp(underExp);
-            components[k].push_back({_distanceSensorData[i].angle, val});
-        }
-    }
-
-    return components;*/
     return {};
 }
 
@@ -60,7 +29,6 @@ int GussianSolver::calculateHeadingAngle(int teta_goal)
            })->angle);
     std::cout << "---------lib-------Safe angle: " << angle << "----------------\n";
     return angle;
-    //return 11;
 }
 
 
@@ -84,34 +52,27 @@ std::vector<DistanceSensorData> GussianSolver::calculateRepulsiveField()
     }
 
     // (10)
-    std::vector<DistanceSensorData> repulsiveFieldData;
-    for (size_t i = 0; i < _distanceSensorData.size(); ++i) // distance sensor data is used, cause it holds angles.
+    std::vector<DistanceSensorData> repulsiveFieldData(_distanceSensorData.size(), {0, 0});
+
+    for (size_t i = 0; i < obstacles.size(); ++i)
     {
-        //qInfo() << "calculating...";
-        double sum = 0;
-        for (size_t k = 0; k < obstacles.size(); ++k)
+        std::cout << "Average angle g: " << RadiansToDegrees(obstacles[i].averageAngle) << std::endl;
+        int midIdx = obstacles[i].angles.size() / 2;
+        double Teta_k = (obstacles[i].angles[midIdx]);  //center angle of the obstacle
+        double sigma = (RadiansToDegrees(obstacles[i].averageAngle / 2.0));
+        double A = obstacles[i].a;
+
+        std::cout << "sigma/: " << sigma << std::endl;
+        std::cout << "teta[0]: " << Teta_k << std::endl;
+        std::cout << "A[k]: " << obstacles[i].a << std::endl;
+        // For each function (Teta_k[i], sigma[i], A[i]), compute the values for all theta_values
+        for (int j = 0; j < _distanceSensorData.size(); ++j)
         {
-            int midIdx = obstacles[k].angles.size() / 2;
-            //std::cout << "Average angle g: " << obstacles[k].averageAngle << std::endl;
-            double sigma = (obstacles[k].averageAngle / 2.0);  // half of the angle occupied by obstacle
-            //qInfo() << "angle: " << obstacles[k].averageAngle;
-            //qInfo() << "midIDx: " << midIdx;
-            //std::cout << "sigma/: " << sigma << std::endl;
-
-            double Teta_k = (obstacles[k].angles[midIdx]);  //center angle of the obstacle
-            //qInfo() << "teta[0]: " << Teta_k;
-            double underExp = (std::pow((Teta_k - (_distanceSensorData[i].angle)), 2))
-                    /
-                    2.0 * std::pow(sigma, 2);
-            //qInfo() << "A[k]: " << obstacles[k].a;
-            double val = obstacles[k].a * std::exp(-underExp);
-            sum += val;
+            double val = calculate_val(_distanceSensorData[j].angle, Teta_k, sigma, A);
+            repulsiveFieldData[j].distance += val;  // Accumulate the result
+            repulsiveFieldData[j].angle = _distanceSensorData[j].angle;
         }
-        //qInfo() << "angle: " << _distanceSensorData[i].angle << "val = " << sum;
-        repulsiveFieldData.push_back({_distanceSensorData[i].angle, sum});
     }
-
-    //qInfo() << "items:" << repulsiveFieldData.size();
 
     return repulsiveFieldData;
 }
