@@ -25,6 +25,7 @@ public:
     std::vector<DistanceSensorData> getSensorData();
     Forces getForces();
     virtual int calculateHeadingAngle(int teta_goal) = 0;
+    void serializeToFile();
 
 protected:
     std::vector<DistanceSensorData> _distanceSensorData;

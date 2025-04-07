@@ -28,6 +28,11 @@ Forces ISolver::getForces()
     return _forces;
 }
 
+void ISolver::serializeToFile()
+{
+    _serializer->serializeData(_forces, _distanceSensorData);
+}
+
 void ISolver::calculateForces(int teta_goal)
 {
     auto repulsive =  calculateRepulsiveField();
@@ -46,11 +51,6 @@ std::vector<DistanceSensorData> ISolver::calculateTotalField(const std::vector<D
                          repulsive[idx].distance + attractive[idx].distance});
     }
 
-    //std::cout << "====print total field values=======\n";
-    for (auto& item: total)
-    {
-        //std::cout << "Force[" << item.angle << "]" << item.distance << '\n';
-    }
     return total;
 }
 
@@ -72,7 +72,7 @@ std::vector<Obstacle> ISolver::findObstacles()
         return {};
     }
     
-    for (auto& item : filteredDataWithObtstacles)
+    //for (auto& item : filteredDataWithObtstacles)
     {
         //qInfo() << "angle: " << item.angle << " | distance:" << item.distance;
     }
@@ -109,10 +109,10 @@ std::vector<Obstacle> ISolver::findObstacles()
     }
     std::cout << "------obstacles detected----------\n";
     std::cout << "Number of obstacles: " << obstacles.size() << '\n';
-    for (size_t k = 0; k < obstacles.size(); ++k)
+    //for (size_t k = 0; k < obstacles.size(); ++k)
     {
         //std::cout << "Obstacle # " << k << '\n';
-        for (size_t i = 0; i < obstacles[k].angles.size(); ++i)
+        //for (size_t i = 0; i < obstacles[k].angles.size(); ++i)
         {
             //std::cout << "angle: " << obstacles[k].angles[i] << " | distance:" << obstacles[k].distances[i] << '\n';
             //obstacles[k].angles[i] = DegreesToRadians(obstacles[k].angles[i]);

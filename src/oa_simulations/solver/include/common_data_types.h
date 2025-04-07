@@ -23,11 +23,11 @@ struct Obstacle
 // https://emanual.robotis.com/docs/en/platform/turtlebot3/features/
 struct SolverParams
 {
-    static constexpr double _thresholdDistance = 1; // minimum distance to object.
+    static constexpr double _thresholdDistance = 1.; // minimum distance to object.
     static constexpr double _w_robot = 0.2; // robot width in meters. turtlebot3 burger w = 0.18
     static constexpr double _distance_sensor_range = 6; // maximum range of distance sensor, in meters.
     static constexpr double _teta_goal = (0); // angle to goal point.
-    static constexpr double _gamma = 0.01; // see eq (11)
+    static constexpr double _gamma = 9; // see eq (11)
     inline static double _local_heading{_teta_goal};
 };
 

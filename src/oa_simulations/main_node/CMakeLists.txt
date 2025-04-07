@@ -32,6 +32,7 @@ ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
   "geometry_msgs"
   "sensor_msgs"
+  "nav_msgs"
 )
 
 target_link_libraries(${PROJECT_NAME} Solver)
