@@ -5,12 +5,16 @@
 #include <algorithm>
 #include <iostream>
 
+namespace {
+double calculate_val(double theta, double Teta_k, double sigma, double A) 
+{
+    double underExp = std::pow(Teta_k - theta, 2) / (2 * std::pow(sigma, 2));
+    return A * std::exp(-underExp);
+}
+}
 namespace Solver
 {
-    double calculate_val(double theta, double Teta_k, double sigma, double A) {
-        double underExp = std::pow(Teta_k - theta, 2) / (2 * std::pow(sigma, 2));
-        return A * std::exp(-underExp);
-    }
+    
 std::vector<std::vector<DistanceSensorData> > GussianSolver::getRepulsiceComponents()
 {
     return {};
