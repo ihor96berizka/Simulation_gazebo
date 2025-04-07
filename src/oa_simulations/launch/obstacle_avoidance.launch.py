@@ -38,7 +38,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
 
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
-    pkg_share = get_package_share_directory('assignment_3a')
+    pkg_share = get_package_share_directory('oa_simulations')
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -65,7 +65,7 @@ def generate_launch_description():
             launch_arguments={'use_sim_time': use_sim_time}.items(),
         ),
         Node(
-            package='assignment_3a',
+            package='oa_simulations',
             executable='obstacle_avoidance',
             #prefix=['gdbserver localhost:3000'],
             name='obstacle_avoidance_node',
@@ -76,6 +76,6 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             name='odometry_rviz',
-            arguments=['-d', [FindPackageShare("assignment_3a"), '/rviz', '/assignment_3a.rviz',]]
+            arguments=['-d', [FindPackageShare("oa_simulations"), '/rviz', '/oa_simulations.rviz',]]
         ),
     ])

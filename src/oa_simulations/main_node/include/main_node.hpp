@@ -32,8 +32,6 @@ private:
 
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr lidar_sub_;
-    rclcpp::Subscription<sensor_msgs::msg::Range>::SharedPtr left_sensor_sub_;
-    rclcpp::Subscription<sensor_msgs::msg::Range>::SharedPtr right_sensor_sub_;
 
     // queue of lidar scans to be processed
     tools::ThreadSafeQueue<std::vector<float>> queue_;

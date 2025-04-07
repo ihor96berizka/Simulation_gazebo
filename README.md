@@ -14,9 +14,9 @@ In this project ROS2 Foxy is used as targer ROS version. Target hw platform -> T
 
 It is necessary to provide path to compiled libs. Note: dont forget to provide correct path.
 
-`export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ihor/Simulation_gazebo/install/assignment_3a/lib/assignment_3a`
+`export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ihor/Simulation_gazebo/install/oa_simulations/lib/oa_simulations`
 
 `source install/setup.sh`
 
-`ros2 launch assignment_3a 
+`ros2 launch oa_simulations 
 obstacle_avoidance.launch.py`

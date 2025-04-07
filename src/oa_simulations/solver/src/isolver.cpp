@@ -28,6 +28,11 @@ Forces ISolver::getForces()
     return _forces;
 }
 
+void ISolver::serializeToFile()
+{
+    _serializer->serializeData(_forces, _distanceSensorData);
+}
+
 void ISolver::calculateForces(int teta_goal)
 {
     auto repulsive =  calculateRepulsiveField();
