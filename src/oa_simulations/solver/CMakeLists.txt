@@ -13,6 +13,7 @@ endif()
 include(GNUInstallDirs)
 
 set(SOURCE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/hyperbolic_secant_solver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/isolver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jthread.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/laplacesolver.cpp
@@ -21,6 +22,7 @@ set(SOURCE_FILES
 )
 set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/include/common_data_types.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/hyperbolic_secant_solver.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/idata_serializer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/idataprovider.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/jthread.h
@@ -35,6 +37,8 @@ add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/common_data_types.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/hyperbolic_secant_solver.hpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/idata_serializer.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
