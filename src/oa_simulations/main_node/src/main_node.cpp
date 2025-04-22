@@ -26,7 +26,7 @@ MainSwcNode::~MainSwcNode()
 
 void MainSwcNode::init()
 {
-    std::this_thread::sleep_for(10s);
+    std::this_thread::sleep_for(5s);
     std::cout <<  " ============ MainSwcNode::init() begin ======== " << std::endl;
     RCLCPP_INFO(this->get_logger(), " ============ MainSwcNode::init() begin ======== ");
     publisher_ = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 1);

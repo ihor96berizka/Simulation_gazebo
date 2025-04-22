@@ -4,6 +4,7 @@
 #include <numeric>
 #include <algorithm>
 #include <iostream>
+#include <chrono>
 
 namespace {
 double calculate_val(double theta, double Teta_k, double sigma, double A) 
@@ -22,16 +23,22 @@ std::vector<std::vector<DistanceSensorData> > GussianSolver::getRepulsiceCompone
 
 int GussianSolver::calculateHeadingAngle(int teta_goal)
 {
-    std::cout << "===============calculateHeadingAngle=====" << std::endl;
     _distanceSensorData = _dataProvider->getSample();
-    std::cout << "===============calculateGForces=====" << std::endl;
+
+    auto start = std::chrono::high_resolution_clock::now();
     calculateForces(teta_goal);
     auto angle = (std::min_element(std::begin(_forces.totalFieldData), std::end(_forces.totalFieldData),
                             [](const DistanceSensorData& lhs, const DistanceSensorData& rhs)
            {
                return lhs.distance < rhs.distance;
            })->angle);
-    std::cout << "---------lib-------Safe angle: " << angle << "----------------\n";
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << duration.count() << " microseconds" << std::endl;
+    
+    (*_output_stream) << duration.count() << std::endl;
+
     return angle;
 }
 

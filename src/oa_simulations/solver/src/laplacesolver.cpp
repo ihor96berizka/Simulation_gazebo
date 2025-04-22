@@ -5,6 +5,8 @@
 #include <algorithm>
 
 #include <iostream>
+#include <chrono>
+#include <fstream>
 
 namespace
 {
@@ -24,12 +26,23 @@ namespace Solver
 int LaplaceSolver::calculateHeadingAngle(int teta_goal)
 {
     _distanceSensorData = _dataProvider->getSample();
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     calculateForces(teta_goal);
-    return std::min_element(std::begin(_forces.totalFieldData), std::end(_forces.totalFieldData),
+    int safe_angle = std::min_element(std::begin(_forces.totalFieldData), std::end(_forces.totalFieldData),
                             [](const DistanceSensorData& lhs, const DistanceSensorData& rhs)
            {
                return lhs.distance < rhs.distance;
            })->angle;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << duration.count() << " microseconds" << std::endl;
+    
+    (*_output_stream) << duration.count() << std::endl;
+
+    return safe_angle;
 }
 
 std::vector<DistanceSensorData> LaplaceSolver::calculateRepulsiveField()
