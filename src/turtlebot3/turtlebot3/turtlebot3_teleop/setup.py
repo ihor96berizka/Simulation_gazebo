@@ -30,7 +30,7 @@ setup(
         'Teleoperation node using keyboard for TurtleBot3.'
     ),
     license='Apache License, Version 2.0',
-    tests_require=['pytest'],
+    #tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'teleop_keyboard = turtlebot3_teleop.script.teleop_keyboard:main'
