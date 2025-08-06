@@ -18,6 +18,7 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jthread.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/laplacesolver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/linearsolver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/logistic_solver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/solver.cpp
 )
 set(HEADER_FILES
@@ -29,6 +30,7 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/include/isolver.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/laplacesolver.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/linearsolver.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/logistic_solver.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/solver.h
 )
 
@@ -51,6 +53,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/laplacesolver.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/linearsolver.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/logistic_solver.hpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/include/solver.h)
 

@@ -6,6 +6,7 @@
 #include "linearsolver.h"
 #include "laplacesolver.h"
 #include "hyperbolic_secant_solver.hpp"
+#include "logistic_solver.hpp"
 
 #include <cmath>
 #include <fstream>
@@ -49,7 +50,8 @@ void MainSwcNode::init()
     solver_ = //std::make_unique<Solver::LinearSolver>();
             //std::make_unique<Solver::GussianSolver>();
             //std::make_unique<Solver::LaplaceSolver>();
-            std::make_unique<Solver::HyperbolicSecantSolver>();
+            //std::make_unique<Solver::HyperbolicSecantSolver>();
+            std::make_unique<Solver::LogisticSolver>();
     solver_->init(std::move(dataProvider), std::move(dataSerializer));
 
 
