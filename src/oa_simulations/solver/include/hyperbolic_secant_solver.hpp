@@ -14,7 +14,7 @@ public:
 HyperbolicSecantSolver()
     {
         std::cout << "--------------Initialized HyperbolicSecantSolver solver---------------\n";
-        _output_stream = std::make_unique<std::ofstream>("heprbolic_secant_exec_time.txt", std::ios::app);
+        _output_stream = std::make_unique<std::ofstream>("hyperbolic_secant_exec_time.txt", std::ios::app);
 
     }
     ~HyperbolicSecantSolver()
