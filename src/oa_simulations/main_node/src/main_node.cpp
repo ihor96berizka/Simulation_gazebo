@@ -48,10 +48,10 @@ void MainSwcNode::init()
     auto dataProvider = std::make_unique<RosDataProvider>(queue_);
     auto dataSerializer = std::make_unique<Serializer>("dataRos.json");
     solver_ = //std::make_unique<Solver::LinearSolver>();
-            //std::make_unique<Solver::GussianSolver>();
+            std::make_unique<Solver::GussianSolver>();
             //std::make_unique<Solver::LaplaceSolver>();
             //std::make_unique<Solver::HyperbolicSecantSolver>();
-            std::make_unique<Solver::LogisticSolver>();
+            //std::make_unique<Solver::LogisticSolver>();
     solver_->init(std::move(dataProvider), std::move(dataSerializer));
 
 

@@ -73,9 +73,9 @@ std::vector<DistanceSensorData> GussianSolver::calculateRepulsiveField()
         double sigma = (RadiansToDegrees(obstacles[i].averageAngle / 2.0));
         double A = obstacles[i].a;
 
-        std::cout << "sigma/: " << sigma << std::endl;
-        std::cout << "teta[0]: " << Teta_k << std::endl;
-        std::cout << "A[k]: " << obstacles[i].a << std::endl;
+        //std::cout << "sigma/: " << sigma << std::endl;
+        //std::cout << "teta[0]: " << Teta_k << std::endl;
+        //std::cout << "A[k]: " << obstacles[i].a << std::endl;
         // For each function (Teta_k[i], sigma[i], A[i]), compute the values for all theta_values
         for (int j = 0; j < _distanceSensorData.size(); ++j)
         {
